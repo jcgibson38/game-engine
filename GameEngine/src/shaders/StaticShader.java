@@ -14,7 +14,9 @@ public class StaticShader extends ShaderProgram
 	protected void bindAttributes() 
 	{
 		//Bind attribute 0 of VAO to the position input in the vertex shader.
-		super.bindAttribute(0, "position");		
+		super.bindAttribute(0, "position");	
+		//Bind attribute 1 of VAO to the textureCoords input in the vertex shader.
+		super.bindAttribute(1,"textureCoords");
 	}
 	
 }

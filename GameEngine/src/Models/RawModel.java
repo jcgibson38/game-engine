@@ -1,4 +1,4 @@
-package renderEngine;
+package Models;
 
 /*
  * Represents a raw 3D model stored in memory.
