@@ -3,10 +3,11 @@ package EngineTester;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
-import Models.RawModel;
-import Models.TexturedModel;
 import entities.Camera;
 import entities.Entity;
+import entities.Light;
+import models.RawModel;
+import models.TexturedModel;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.OBJLoader;
@@ -23,13 +24,15 @@ public class MainGameLoop
 		StaticShader shader = new StaticShader();
 		Renderer renderer = new Renderer(shader);
 		
-		RawModel model = OBJLoader.loadObjModel("stall", loader);
+		RawModel model = OBJLoader.loadObjModel("dragon", loader);
 		
-		ModelTexture texture = new ModelTexture(loader.loadTexture("stallTexture"));
+		ModelTexture texture = new ModelTexture(loader.loadTexture("DragonTexture"));
 		
 		TexturedModel staticModel = new TexturedModel(model,texture);
 		
-		Entity entity = new Entity( staticModel,new Vector3f(0,0,-30),0,0,0,1 );
+		Entity entity = new Entity( staticModel,new Vector3f(0,0,-25),0,0,0,1 );
+		
+		Light light = new Light(new Vector3f(0,0,-20),new Vector3f(1,1,1));
 		
 		Camera camera = new Camera();
 		
@@ -40,6 +43,7 @@ public class MainGameLoop
 			camera.move();
 			renderer.prepare();
 			shader.start();
+			shader.loadLight(light);
 			shader.loadViewMatrix(camera);
 			renderer.render(entity,shader);
 			shader.stop();

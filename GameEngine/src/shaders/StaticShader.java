@@ -3,6 +3,7 @@ package shaders;
 import org.lwjgl.util.vector.Matrix4f;
 
 import entities.Camera;
+import entities.Light;
 import toolbox.Maths;
 
 public class StaticShader extends ShaderProgram
@@ -13,6 +14,8 @@ public class StaticShader extends ShaderProgram
 	private int location_transformationMatrix;
 	private int location_projectionMatrix;
 	private int location_viewMatrix;
+	private int location_lightPosition;
+	private int location_lightColor;
 
 	public StaticShader()
 	{
@@ -26,6 +29,8 @@ public class StaticShader extends ShaderProgram
 		super.bindAttribute(0, "position");	
 		//Bind attribute 1 of VAO to the textureCoords input in the vertex shader.
 		super.bindAttribute(1,"textureCoords");
+		//Bind attribute 2 of VAO to the normal vector input in the vertex shader.
+		super.bindAttribute(2, "normal");
 	}
 
 	@Override
@@ -34,6 +39,8 @@ public class StaticShader extends ShaderProgram
 		location_transformationMatrix = super.getUniformLocation("transformationMatrix");
 		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
+		location_lightPosition = super.getUniformLocation("lightPosition");
+		location_lightColor = super.getUniformLocation("lightColor");
 	}
 	
 	public void loadTransformationMatrix(Matrix4f matrix)
@@ -50,6 +57,12 @@ public class StaticShader extends ShaderProgram
 	{
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		super.loadMatrix(location_viewMatrix, viewMatrix);
+	}
+	
+	public void loadLight(Light light)
+	{
+		super.loadVector(location_lightPosition, light.getPosition());
+		super.loadVector(location_lightColor, light.getColor());
 	}
 	
 }

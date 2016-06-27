@@ -10,7 +10,7 @@ import java.util.List;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import Models.RawModel;
+import models.RawModel;
 
 public class OBJLoader 
 {
@@ -115,7 +115,7 @@ public class OBJLoader
 			indicesArray[i] = indices.get(i);
 		}
 		
-		return loader.loadToVAO(verticesArray,textureArray,indicesArray);
+		return loader.loadToVAO(verticesArray,textureArray,normalsArray,indicesArray);
 	}
 	
 	private static void processVertex(String[] vertexData,List<Integer> indices,List<Vector2f> textures, List<Vector3f> normals,float[] textureArray,float[] normalsArray)

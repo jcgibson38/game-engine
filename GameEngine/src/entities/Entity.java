@@ -2,7 +2,7 @@ package entities;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import Models.TexturedModel;
+import models.TexturedModel;
 
 /*
  * An Entity contains an instance of a textured model, along with its position, rotation, and scale.

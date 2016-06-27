@@ -16,7 +16,7 @@ import org.lwjgl.opengl.GL30;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
-import Models.RawModel;
+import models.RawModel;
 
 /*
  * Loads 3D model data into memory storing positional vertex data in VAO.
@@ -29,7 +29,7 @@ public class Loader
 	private List<Integer> textures = new ArrayList<Integer>();
 	
 	//Load vertex points of a model into VAO.
-	public RawModel loadToVAO(float[] positions,float[] textureCoords,int[] indices)
+	public RawModel loadToVAO(float[] positions,float[] textureCoords,float[] normals,int[] indices)
 	{
 		//Create empty VAO
 		int vaoID = createVAO();
@@ -38,6 +38,8 @@ public class Loader
 		storeDataInAttributeList(0,3,positions);
 		//Store texture coordinate data into VAO
 		storeDataInAttributeList(1,2,textureCoords);
+		//Store normal vector data into VAO
+		storeDataInAttributeList(2,3,normals);
 		unbindVAO();
 		//Return the VAO as a RawModel.
 		return new RawModel(vaoID,indices.length);
