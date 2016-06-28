@@ -72,6 +72,12 @@ public abstract class ShaderProgram
 		GL20.glBindAttribLocation(programID, attribute, variableName);
 	}
 	
+	//Load int into uniform variable
+	protected void loadInt(int location,int value)
+	{
+		GL20.glUniform1i(location,value);
+	}
+	
 	//Load float into uniform variable
 	protected void loadFloat(int location,float value)
 	{
