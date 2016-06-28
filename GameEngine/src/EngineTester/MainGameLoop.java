@@ -10,6 +10,7 @@ import org.lwjgl.util.vector.Vector3f;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import entities.Player;
 import models.RawModel;
 import models.TexturedModel;
 import randomize.RandomGenerator;
@@ -66,6 +67,13 @@ public class MainGameLoop
 			trees.add(entity);
 		}
 		
+		RawModel dragonModel = OBJLoader.loadObjModel("dragon",loader);
+		ModelTexture dragonTexture = new ModelTexture(loader.loadTexture("DragonTexture"));
+		dragonTexture.setShineDamper(10);
+		dragonTexture.setReflectivity(1);
+		TexturedModel playerDragon = new TexturedModel(dragonModel,dragonTexture);
+		Player player = new Player(playerDragon,new Vector3f(100,0,-50),0,0,0,1);
+		
 		//Setup light source
 		Light light = new Light(new Vector3f(3000,2000,2000),new Vector3f(1,1,1));		
 		Camera camera = new Camera();		
@@ -81,7 +89,9 @@ public class MainGameLoop
 		while(!Display.isCloseRequested())
 		{
 			camera.move();
+			player.move();
 			
+			renderer.processEntity(player);
 			renderer.processTerrain(terrain);
 			renderer.processTerrain(terrain2);
 			
