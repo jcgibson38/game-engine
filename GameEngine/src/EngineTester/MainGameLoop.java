@@ -1,5 +1,9 @@
 package EngineTester;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -8,6 +12,7 @@ import entities.Entity;
 import entities.Light;
 import models.RawModel;
 import models.TexturedModel;
+import randomize.RandomGenerator;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -18,37 +23,49 @@ import textures.ModelTexture;
 public class MainGameLoop 
 {
 	public static void main(String[] args)
-	{
+	{		
 		DisplayManager.createDisplay();		
 		Loader loader = new Loader();
-		
-		//Setup the model.
-		RawModel model = OBJLoader.loadObjModel("dragon", loader);
-		ModelTexture texture = new ModelTexture(loader.loadTexture("DragonTexture"));
+
+		//Some grass.
+		RawModel model = OBJLoader.loadObjModel("grass1", loader);
+		ModelTexture texture = new ModelTexture(loader.loadTexture("grass1Texture"));
 		texture.setShineDamper(10);
-		texture.setReflectivity(1);		
-		TexturedModel staticModel = new TexturedModel(model,texture);	
-		Entity entity = new Entity(staticModel,new Vector3f(0,0,-25),0,0,0,1);
+		texture.setReflectivity(1);
+		TexturedModel staticModel = new TexturedModel(model,texture);
+		
+		List<Entity> grass = new ArrayList<Entity>();
+		for(int i = 0;i < 500;i++)
+		{
+			Vector3f position = new Vector3f(RandomGenerator.randInt(0,350),0,-RandomGenerator.randInt(0,350));
+			float rotation = RandomGenerator.randInt(0, 180);
+			Entity entity = new Entity(staticModel,position,0,rotation,0,0.5f);
+			grass.add(entity);
+		}		
 		
 		//Setup light source
 		Light light = new Light(new Vector3f(3000,2000,2000),new Vector3f(1,1,1));		
 		Camera camera = new Camera();		
 		
-		Terrain terrain = new Terrain(0,-1,loader,new ModelTexture(loader.loadTexture("snow")));
-		Terrain terrain2 = new Terrain(1,-1,loader,new ModelTexture(loader.loadTexture("snow")));
+		//Terrain
+		Terrain terrain = new Terrain(0,-1,loader,new ModelTexture(loader.loadTexture("grass1Texture")));
+		Terrain terrain2 = new Terrain(1,-1,loader,new ModelTexture(loader.loadTexture("grass1Texture")));
+		
 		
 		MasterRenderer renderer = new MasterRenderer();
 		
 		//Primary game loop.
 		while(!Display.isCloseRequested())
 		{
-			entity.increaseRotation(0,1,0);
 			camera.move();
 			
 			renderer.processTerrain(terrain);
 			renderer.processTerrain(terrain2);
 			
-			renderer.processEntity(entity);
+			for(Entity entity:grass)
+			{
+				renderer.processEntity(entity);
+			}
 			renderer.render(light,camera);
 			DisplayManager.updateDisplay();
 		}
