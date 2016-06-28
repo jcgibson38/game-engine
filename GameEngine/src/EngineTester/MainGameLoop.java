@@ -12,6 +12,7 @@ import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
 import renderEngine.OBJLoader;
+import terrains.Terrain;
 import textures.ModelTexture;
 
 public class MainGameLoop 
@@ -22,16 +23,20 @@ public class MainGameLoop
 		Loader loader = new Loader();
 		
 		//Setup the model.
-		RawModel model = OBJLoader.loadObjModel("dragon", loader);		
+		RawModel model = OBJLoader.loadObjModel("dragon", loader);
 		ModelTexture texture = new ModelTexture(loader.loadTexture("DragonTexture"));
 		texture.setShineDamper(10);
 		texture.setReflectivity(1);		
 		TexturedModel staticModel = new TexturedModel(model,texture);	
-		Entity entity = new Entity( staticModel,new Vector3f(0,-2.5f,-25),0,0,0,1 );
+		Entity entity = new Entity(staticModel,new Vector3f(0,0,-25),0,0,0,1);
 		
 		//Setup light source
-		Light light = new Light(new Vector3f(0,0,-20),new Vector3f(1,1,1));		
+		Light light = new Light(new Vector3f(3000,2000,2000),new Vector3f(1,1,1));		
 		Camera camera = new Camera();		
+		
+		Terrain terrain = new Terrain(0,-1,loader,new ModelTexture(loader.loadTexture("snow")));
+		Terrain terrain2 = new Terrain(1,-1,loader,new ModelTexture(loader.loadTexture("snow")));
+		
 		MasterRenderer renderer = new MasterRenderer();
 		
 		//Primary game loop.
@@ -39,6 +44,10 @@ public class MainGameLoop
 		{
 			entity.increaseRotation(0,1,0);
 			camera.move();
+			
+			renderer.processTerrain(terrain);
+			renderer.processTerrain(terrain2);
+			
 			renderer.processEntity(entity);
 			renderer.render(light,camera);
 			DisplayManager.updateDisplay();
