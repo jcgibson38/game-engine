@@ -37,6 +37,9 @@ public class MainGameLoop
 		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));		
 		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture,rTexture,gTexture,bTexture);
 
+		//Generate terrain
+		Terrain terrain = new Terrain(0,-1,loader,texturePack,blendMap,"heightmap");	
+		
 		//Some grass.
 		RawModel model = OBJLoader.loadObjModel("grass1", loader);
 		ModelTexture texture = new ModelTexture(loader.loadTexture("grass1Texture"));
@@ -46,7 +49,10 @@ public class MainGameLoop
 		List<Entity> grass = new ArrayList<Entity>();
 		for(int i = 0;i < 250;i++)
 		{
-			Vector3f position = new Vector3f(RandomGenerator.randInt(0,350),0,-RandomGenerator.randInt(0,350));
+			float xPos = RandomGenerator.randInt(0,600);
+			float zPos = -RandomGenerator.randInt(0,600);
+			float yPos = terrain.getHeightOfTerrain(xPos,zPos);
+			Vector3f position = new Vector3f(xPos,yPos,zPos);
 			float rotation = RandomGenerator.randInt(0, 180);
 			Entity entity = new Entity(staticModel,position,0,rotation,0,1);
 			grass.add(entity);
@@ -61,7 +67,10 @@ public class MainGameLoop
 		List<Entity> trees = new ArrayList<Entity>();
 		for(int i = 0;i < 50;i++)
 		{
-			Vector3f position = new Vector3f(RandomGenerator.randInt(0,350),0,-RandomGenerator.randInt(0,350));
+			float xPos = RandomGenerator.randInt(0,600);
+			float zPos = -RandomGenerator.randInt(0,600);
+			float yPos = terrain.getHeightOfTerrain(xPos,zPos);
+			Vector3f position = new Vector3f(xPos,yPos,zPos);
 			float rotation = RandomGenerator.randInt(0, 180);
 			Entity entity = new Entity(treeModel,position,0,rotation,0,1);
 			trees.add(entity);
@@ -76,12 +85,7 @@ public class MainGameLoop
 		
 		//Setup light source
 		Light light = new Light(new Vector3f(20000,40000,20000),new Vector3f(1,1,1));		
-		Camera camera = new Camera(player);		
-		
-		//Generate terrain
-		Terrain terrain = new Terrain(0,-1,loader,texturePack,blendMap,"heightmap");
-		Terrain terrain2 = new Terrain(1,-1,loader,texturePack,blendMap,"heightmap");
-		
+		Camera camera = new Camera(player);			
 		
 		MasterRenderer renderer = new MasterRenderer();
 		
@@ -89,11 +93,10 @@ public class MainGameLoop
 		while(!Display.isCloseRequested())
 		{
 			camera.move();
-			player.move();
+			player.move(terrain);
 			
 			renderer.processEntity(player);
 			renderer.processTerrain(terrain);
-			renderer.processTerrain(terrain2);
 			
 			for(Entity entity:grass)
 			{
