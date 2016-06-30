@@ -30,10 +30,10 @@ public class MainGameLoop
 		DisplayManager.createDisplay();		
 		Loader loader = new Loader();
 		
-		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("texture1"));
-		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("texture2"));
-		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("texture3"));
-		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("texture4"));
+		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassA"));
+		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("grassB"));
+		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("grassC"));
+		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("grassD"));
 		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));		
 		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture,rTexture,gTexture,bTexture);
 
@@ -60,7 +60,7 @@ public class MainGameLoop
 		
 		//Trees
 		RawModel tree = OBJLoader.loadObjModel("tree2", loader);
-		ModelTexture treetexture = new ModelTexture(loader.loadTexture("tree1texture"));
+		ModelTexture treetexture = new ModelTexture(loader.loadTexture("test"));
 		treetexture.setShineDamper(100);
 		treetexture.setReflectivity(0);
 		TexturedModel treeModel = new TexturedModel(tree,treetexture);
@@ -77,7 +77,7 @@ public class MainGameLoop
 		}
 		
 		RawModel dragonModel = OBJLoader.loadObjModel("dragon",loader);
-		ModelTexture dragonTexture = new ModelTexture(loader.loadTexture("DragonTexture"));
+		ModelTexture dragonTexture = new ModelTexture(loader.loadTexture("grassE"));
 		dragonTexture.setShineDamper(10);
 		dragonTexture.setReflectivity(1);
 		TexturedModel playerDragon = new TexturedModel(dragonModel,dragonTexture);
