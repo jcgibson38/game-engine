@@ -8,7 +8,7 @@ public class Camera
 {
 	private Player player;
 	
-	private float distanceFromPlayer = 50;
+	private float distanceFromPlayer = 75;
 	private float angleAroundPlayer = 0;	
 	
 	private Vector3f position = new Vector3f(0,0,0);
@@ -71,9 +71,9 @@ public class Camera
 	
 	private void calculatePitch()
 	{
-		if(Mouse.isButtonDown(1))
+		if(Mouse.isButtonDown(0))
 		{
-			float pitchChange = Mouse.getDY() * 0.1f;
+			float pitchChange = Mouse.getDY() * 0.2f;
 			pitch -= pitchChange;
 		}
 	}
@@ -82,7 +82,7 @@ public class Camera
 	{
 		if(Mouse.isButtonDown(0))
 		{
-			float angleChange = Mouse.getDX() * 0.1f;
+			float angleChange = Mouse.getDX() * 0.2f;
 			angleAroundPlayer -= angleChange;
 		}
 	}

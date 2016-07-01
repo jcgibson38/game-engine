@@ -30,9 +30,9 @@ public class MasterRenderer
 	private static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE = 1000;
 	
-	private static final float RED = 42.0f/255.0f;
-	private static final float GREEN = 199.0f/255.0f;
-	private static final float BLUE = 231.0f/255.0f;
+	private static final float RED = 11.0f/255.0f;
+	private static final float GREEN = 72.0f/255.0f;
+	private static final float BLUE = 107.0f/255.0f;
 	
 	private Matrix4f projectionMatrix;
 	
@@ -58,18 +58,18 @@ public class MasterRenderer
 		GL11.glDisable(GL11.GL_CULL_FACE);
 	}
 	
-	public void render(Light sun,Camera camera)
+	public void render(List<Light> lights,Camera camera)
 	{
 		prepare();
 		shader.start();
 		shader.loadSkyColor(RED,GREEN,BLUE);
-		shader.loadLight(sun);
+		shader.loadLights(lights);
 		shader.loadViewMatrix(camera);
 		renderer.render(entities);
 		shader.stop();
 		terrainShader.start();
 		terrainShader.loadSkyColor(RED, GREEN, BLUE);
-		terrainShader.loadLight(sun);
+		terrainShader.loadLights(lights);
 		terrainShader.loadViewMatrix(camera);
 		terrainRenderer.render(terrains);
 		terrainShader.stop();

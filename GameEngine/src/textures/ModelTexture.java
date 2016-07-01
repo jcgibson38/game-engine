@@ -47,8 +47,5 @@ public class ModelTexture
 	public void setHasTransparency(boolean hasTransparency) 
 	{
 		this.hasTransparency = hasTransparency;
-	}
-	
-	
-	
+	}	
 }

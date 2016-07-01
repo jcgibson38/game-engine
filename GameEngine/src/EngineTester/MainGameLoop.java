@@ -7,6 +7,8 @@ import java.util.Random;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
+import OBJFileLoader.ModelData;
+import OBJFileLoader.OBJFileLoader;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
@@ -76,15 +78,20 @@ public class MainGameLoop
 			trees.add(entity);
 		}
 		
-		RawModel dragonModel = OBJLoader.loadObjModel("dragon",loader);
-		ModelTexture dragonTexture = new ModelTexture(loader.loadTexture("grassE"));
+		ModelData data = OBJFileLoader.loadOBJ("cowboy");
+		RawModel dragonModel = loader.loadToVAO(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getIndices());
+		ModelTexture dragonTexture = new ModelTexture(loader.loadTexture("cowboyTexture"));
 		dragonTexture.setShineDamper(10);
 		dragonTexture.setReflectivity(1);
 		TexturedModel playerDragon = new TexturedModel(dragonModel,dragonTexture);
 		Player player = new Player(playerDragon,new Vector3f(100,0,-50),0,180,0,0.6f);
 		
 		//Setup light source
-		Light light = new Light(new Vector3f(20000,40000,20000),new Vector3f(1,1,1));		
+		Light light = new Light(new Vector3f(0,10000,-7000),new Vector3f(1,1,1));
+		List<Light> lights = new ArrayList<Light>();
+		lights.add(light);
+		
+		
 		Camera camera = new Camera(player);			
 		
 		MasterRenderer renderer = new MasterRenderer();
@@ -107,7 +114,7 @@ public class MainGameLoop
 			{
 				renderer.processEntity(entity);
 			}
-			renderer.render(light,camera);
+			renderer.render(lights,camera);
 			DisplayManager.updateDisplay();
 		}
 		
