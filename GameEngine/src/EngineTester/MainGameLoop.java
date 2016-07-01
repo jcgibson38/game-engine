@@ -84,17 +84,23 @@ public class MainGameLoop
 		dragonTexture.setShineDamper(10);
 		dragonTexture.setReflectivity(1);
 		TexturedModel playerDragon = new TexturedModel(dragonModel,dragonTexture);
-		Player player = new Player(playerDragon,new Vector3f(100,0,-50),0,180,0,0.6f);
+		Player player = new Player(playerDragon,new Vector3f(153,5,-274),0,180,0,0.6f);
 		
-		//Setup light source
-		Light light = new Light(new Vector3f(0,10000,-7000),new Vector3f(1,1,1));
+		//Setup light sources
 		List<Light> lights = new ArrayList<Light>();
-		lights.add(light);
+		Light light1 = new Light(new Vector3f(0,1000,-7000),new Vector3f(0.4f,0.4f,0.4f));
+		Light light2 = new Light(new Vector3f(185,10,-293),new Vector3f(2,0,0),new Vector3f(1,0.01f,0.002f));
+		Light light3 = new Light(new Vector3f(370,17,-300),new Vector3f(0,2,2),new Vector3f(1,0.01f,0.002f));
+		Light light4 = new Light(new Vector3f(293,7,-305),new Vector3f(2,2,0),new Vector3f(1,0.01f,0.002f));
+		lights.add(light1);
+		lights.add(light2);
+		lights.add(light3);
+		lights.add(light4);
 		
 		
 		Camera camera = new Camera(player);			
 		
-		MasterRenderer renderer = new MasterRenderer();
+		MasterRenderer renderer = new MasterRenderer(loader);
 		
 		//Primary game loop.
 		while(!Display.isCloseRequested())
