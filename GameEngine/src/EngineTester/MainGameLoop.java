@@ -24,6 +24,7 @@ import terrains.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
+import toolbox.MousePicker;
 
 public class MainGameLoop 
 {
@@ -102,11 +103,15 @@ public class MainGameLoop
 		
 		MasterRenderer renderer = new MasterRenderer(loader);
 		
+		MousePicker picker = new MousePicker(camera,renderer.getProjectionMatrix());
+		
 		//Primary game loop.
-		while(!Display.isCloseRequested())
+		while(!DisplayManager.isCloseRequested() && !Display.isCloseRequested())
 		{
 			camera.move();
 			player.move(terrain);
+			
+			picker.update();
 			
 			renderer.processEntity(player);
 			renderer.processTerrain(terrain);

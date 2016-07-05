@@ -31,9 +31,9 @@ public class MasterRenderer
 	private static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE = 1000;
 	
-	private static final float RED = 11.0f/255.0f;
-	private static final float GREEN = 72.0f/255.0f;
-	private static final float BLUE = 107.0f/255.0f;
+	private static final float RED = 0.5444f;
+	private static final float GREEN = 0.62f;
+	private static final float BLUE = 0.69f;
 	
 	private Matrix4f projectionMatrix;
 	
@@ -132,5 +132,10 @@ public class MasterRenderer
 		projectionMatrix.m23 = -1;
 		projectionMatrix.m32 = -((2*NEAR_PLANE*FAR_PLANE)/frustum_length);
 		projectionMatrix.m33 = 0;
+	}
+	
+	public Matrix4f getProjectionMatrix()
+	{
+		return projectionMatrix;
 	}
 }
