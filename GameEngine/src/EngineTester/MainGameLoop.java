@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -31,10 +32,20 @@ import toolbox.MousePicker;
 
 public class MainGameLoop 
 {
+	private static List<Entity> treeEntities;
+	private static Loader loader;
+	private static Terrain terrain;
+	
+	private static TexturedModel treeTexturedModel;
+	
+	private static int selectedEntity;
+	
+	private static boolean isSelected = false;
+	
 	public static void main(String[] args)
 	{		
 		DisplayManager.createDisplay();		
-		Loader loader = new Loader();
+		loader = new Loader();
 		
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassA"));
 		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("grassB"));
@@ -44,7 +55,7 @@ public class MainGameLoop
 		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture,rTexture,gTexture,bTexture);
 
 		//Generate terrain
-		Terrain terrain = new Terrain(0,-1,loader,texturePack,blendMap,"heightmap");	
+		terrain = new Terrain(0,-1,loader,texturePack,blendMap,"heightmap");	
 		
 		//Some grass.
 		RawModel grassModel = OBJLoader.loadObjModel("grass1", loader);
@@ -60,8 +71,8 @@ public class MainGameLoop
 		ModelTexture treeTexture = new ModelTexture(loader.loadTexture("test"));
 		treeTexture.setShineDamper(100);
 		treeTexture.setReflectivity(0);
-		TexturedModel treeTexturedModel = new TexturedModel(treeModel,treeTexture);
-		List<Entity> treeEntities = new ArrayList<Entity>();
+		treeTexturedModel = new TexturedModel(treeModel,treeTexture);
+		treeEntities = new ArrayList<Entity>();
 		treeEntities = EntityLoader.loadEntities(treeTexturedModel,"treePositions",terrain);
 		
 		ModelData data = OBJFileLoader.loadOBJ("cowboy");
@@ -83,7 +94,6 @@ public class MainGameLoop
 		lights.add(light3);
 		lights.add(light4);
 		
-		
 		Camera camera = new Camera(player);			
 		
 		MasterRenderer renderer = new MasterRenderer(loader);
@@ -96,7 +106,22 @@ public class MainGameLoop
 			camera.move();
 			player.move(terrain);
 			
-			picker.update();
+			if(!DisplayManager.isInPlayMode() && isSelected)
+			{
+				if(selectedEntity > 0)
+				{
+					picker.update();
+					float newX = picker.getTerrainCoords(terrain).x;
+					float newZ = picker.getTerrainCoords(terrain).z;
+					float newY = picker.getTerrainCoords(terrain).y;
+					Vector3f newPosition = new Vector3f(newX,newY,newZ);
+					treeEntities.get(selectedEntity).setPosition(newPosition);
+					if(Mouse.isButtonDown(1))
+					{
+						selectedEntity = -1;
+					}
+				}
+			}
 			
 			renderer.processEntity(player);
 			renderer.processTerrain(terrain);
@@ -118,5 +143,35 @@ public class MainGameLoop
 		renderer.cleanUp();
 		loader.cleanUp();
 		DisplayManager.closeDisplay();
+	}
+	
+	public static void addTree()
+	{		
+		//Position
+		float xPos = 50;
+		float zPos = -50;
+		float yPos = terrain.getHeightOfTerrain(xPos,zPos);
+		Vector3f position = new Vector3f(xPos,yPos,zPos);
+		
+		//Rotation
+		float rotation = RandomGenerator.randInt(0, 180);
+		
+		//Generate entity
+		Entity entity = new Entity(treeTexturedModel,position,0,rotation,0,1);
+		
+		treeEntities.add(entity);
+		
+		selectedEntity = treeEntities.size() - 1;
+		enableSelection();
+	}
+	
+	public static void enableSelection()
+	{
+		isSelected = true;
+	}
+	
+	public static void disableSelection()
+	{
+		isSelected = false;
 	}
 }

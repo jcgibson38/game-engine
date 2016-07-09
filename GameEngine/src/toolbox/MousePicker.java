@@ -8,6 +8,7 @@ import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
 import entities.Camera;
+import terrains.Terrain;
 
 public class MousePicker 
 {
@@ -16,6 +17,9 @@ public class MousePicker
 	private Matrix4f projectionMatrix;
 	private Matrix4f viewMatrix;
 	private Camera camera;
+	
+	private static final float DISTANCE = 300.0f;
+	private static final int MAXCOUNT = 300;
 	
 	public MousePicker(Camera camera,Matrix4f projection)
 	{
@@ -69,5 +73,46 @@ public class MousePicker
 		Vector3f mouseRay = new Vector3f(rayWorld.x,rayWorld.y,rayWorld.z);
 		mouseRay.normalise();
 		return mouseRay;
+	}
+	
+	private Vector3f getPointOnRay(Vector3f ray,float distance)
+	{
+		Vector3f cameraPos = camera.getPosition();
+		Vector3f start = new Vector3f(cameraPos.x,cameraPos.y,cameraPos.z);
+		Vector3f scaledRay = new Vector3f(ray.x,ray.y,ray.z);
+		scaledRay.scale(distance);
+		return Vector3f.add(start,scaledRay,null);
+	}
+	
+	public Vector3f getTerrainCoords(Terrain terrain)
+	{
+		Vector3f ray = getCurrentRay();
+		
+		return terrainSearch(ray,terrain);
+	}
+	
+	private Vector3f terrainSearch(Vector3f ray,Terrain terrain)
+	{
+		int loopCount = 0;
+		float distance = DISTANCE;
+		
+		Vector3f mid = new Vector3f();
+		
+		while(loopCount < MAXCOUNT)
+		{
+			mid = getPointOnRay(ray,distance);
+			float terrainHeight = terrain.getHeightOfTerrain(mid.x,mid.z);
+			if(mid.y < terrainHeight)
+			{
+				distance--;
+			}
+			else
+			{
+				break;
+			}
+		}
+		//System.out.println("posstart: " + mid.x + ", " + mid.y + ", " + mid.z);
+		
+		return mid;
 	}
 }

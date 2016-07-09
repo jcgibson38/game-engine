@@ -7,6 +7,7 @@ import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.List;
 import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.MenuItem;
@@ -23,6 +24,8 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.PixelFormat;
+
+import EngineTester.MainGameLoop;
 
 public class DisplayManager 
 {
@@ -136,11 +139,17 @@ public class DisplayManager
 	{
 		//Button Panel
 		Panel btnPanel = new Panel();
-		btnPanel.setLayout(new GridLayout(2,1));
+		btnPanel.setLayout(new GridLayout(4,1));
 		
 		//Create buttons
 		Button playButton = new Button(" Play ");
 		Button editButton = new Button(" Edit ");
+		Button addButton = new Button(" Add ");
+		
+		//Create list
+		List entityList = new List();
+		entityList.add("Tree");
+		entityList.add("Grass");
 		
 		//Button Listeners
 		playButton.addActionListener(new ActionListener()
@@ -150,6 +159,7 @@ public class DisplayManager
 			{
 				System.out.println("play button pressed");
 				inPlayMode = true;
+				MainGameLoop.disableSelection();
 			}			
 		});		
 		editButton.addActionListener(new ActionListener()
@@ -161,10 +171,21 @@ public class DisplayManager
 				inPlayMode = false;
 			}			
 		});
+		addButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				System.out.println("add button pressed");
+				MainGameLoop.addTree();
+			}			
+		});
 		
-		//Add buttons to panel
+		//Add buttons and list to panel
 		btnPanel.add(playButton);
 		btnPanel.add(editButton);
+		btnPanel.add(entityList);
+		btnPanel.add(addButton);
 		
 		//Create east panel
 		Panel east = new Panel(new GridBagLayout());
