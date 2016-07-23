@@ -111,11 +111,14 @@ public class MainGameLoop
 				if(selectedEntity > 0)
 				{
 					picker.update();
-					float newX = picker.getTerrainCoords(terrain).x;
-					float newZ = picker.getTerrainCoords(terrain).z;
-					float newY = picker.getTerrainCoords(terrain).y;
-					Vector3f newPosition = new Vector3f(newX,newY,newZ);
-					treeEntities.get(selectedEntity).setPosition(newPosition);
+					Vector3f pickerVec = picker.getTerrainCoords(terrain);
+					if(pickerVec != null){
+						float newX = pickerVec.x;
+						float newZ = pickerVec.z;
+						float newY = pickerVec.y;
+						Vector3f newPosition = new Vector3f(newX,newY,newZ);
+						treeEntities.get(selectedEntity).setPosition(newPosition);
+					}
 					if(Mouse.isButtonDown(1))
 					{
 						selectedEntity = -1;

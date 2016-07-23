@@ -18,8 +18,8 @@ public class MousePicker
 	private Matrix4f viewMatrix;
 	private Camera camera;
 	
-	private static final float DISTANCE = 300.0f;
-	private static final int MAXCOUNT = 300;
+	private static final float DISTANCE = 400.0f;
+	private static final int MAXCOUNT = 200;
 	
 	public MousePicker(Camera camera,Matrix4f projection)
 	{
@@ -91,28 +91,35 @@ public class MousePicker
 		return terrainSearch(ray,terrain);
 	}
 	
-	private Vector3f terrainSearch(Vector3f ray,Terrain terrain)
-	{
-		int loopCount = 0;
-		float distance = DISTANCE;
-		
-		Vector3f mid = new Vector3f();
-		
-		while(loopCount < MAXCOUNT)
-		{
-			mid = getPointOnRay(ray,distance);
-			float terrainHeight = terrain.getHeightOfTerrain(mid.x,mid.z);
-			if(mid.y < terrainHeight)
-			{
-				distance--;
+	private Vector3f terrainSearch(Vector3f ray,Terrain terrain){
+		int count = 0;
+		return binarySearch(count,ray,terrain,0,DISTANCE);
+	}
+	
+	private Vector3f binarySearch(int count,Vector3f ray,Terrain terrain,float min,float max){
+		count++;
+		if(terrain != null){
+			//Get the mid point on the ray.
+			float mid = min + ((max-min)/2f);
+			Vector3f point = getPointOnRay(ray,mid);
+			//Get the terrain height at this point.
+			float terrainHeight = terrain.getHeightOfTerrain(point.x,point.z);
+			
+			//Found the terrain intersection.
+			if(Math.abs(point.y-terrainHeight) < 0.5 || count >= MAXCOUNT){
+				return point;
 			}
-			else
-			{
-				break;
+			//Mid point is under the terrain.
+			else if(point.y < terrainHeight){
+				return binarySearch(count,ray,terrain,min,mid);
+			}
+			//Mid point is above the terrain.
+			else{
+				return binarySearch(count,ray,terrain,mid,max);
 			}
 		}
-		//System.out.println("posstart: " + mid.x + ", " + mid.y + ", " + mid.z);
-		
-		return mid;
+		else{
+			return null;
+		}
 	}
 }
